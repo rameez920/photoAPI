@@ -1,13 +1,22 @@
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
+var upload = multer({dest: 'uploads/'});
 
-var ctrlPhotos = require('../controllers/photos');
-var ctrlComments = require('../controllers/comment');
+var ctrlPhotos = require('../api/controllers/photos');
+var ctrlComments = require('../api/controllers/comment');
+
+
+router.get('/', function(req, res) {
+	res.render('index', {
+        title: 'Upload Images'
+    });
+});
 
 //get all photos uploaded
 router.get('/photos', ctrlPhotos.photoList);
 //upload a new photo
-router.post('/photos', ctrlPhotos.uploadPhoto);
+router.post('/photos', upload.single('photo'), ctrlPhotos.uploadPhoto);
 //get a single photo 
 router.get('/photos/:photoid', ctrlPhotos.viewPhoto);
 //edit photo caption
